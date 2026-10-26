@@ -1,7 +1,0 @@
-const produtos = [
-  {id: 1, nome: 'Tec9', preco: 1081.98 },
-  {id: 2, nome: 'C4', preco: 23.88 },
-  {id: 3, nome: 'Bazuka', preco: 7101.50 }
-];
-
-module.exports = produtos;
