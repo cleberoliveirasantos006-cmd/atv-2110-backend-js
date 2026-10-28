@@ -1,0 +1,270 @@
+/* ===== Reset e base ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0f1115;
+    --bg-card: #181b22;
+    --bg-input: #21252e;
+    --borda: #2b303b;
+    --texto: #e6e8ec;
+    --texto-fraco: #8b93a1;
+    --primaria: #22c55e;
+    --primaria-escura: #16a34a;
+    --perigo: #ef4444;
+    --perigo-escura: #dc2626;
+    --sombra: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at top, #1a1f2b 0%, var(--bg) 55%);
+    color: var(--texto);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    line-height: 1.5;
+}
+
+/* ===== Container principal ===== */
+main {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+/* ===== Título ===== */
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #22c55e, #4ade80, #a3e635);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-bottom: 0.25rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--texto);
+    margin-bottom: 0.25rem;
+}
+
+/* ===== Formulário ===== */
+#formulario {
+    background: var(--bg-card);
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--sombra);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#titulo-form {
+    margin-bottom: 0.25rem;
+}
+
+#formulario input {
+    background: var(--bg-input);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--texto);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#formulario input::placeholder {
+    color: var(--texto-fraco);
+}
+
+#formulario input:focus {
+    border-color: var(--primaria);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+}
+
+/* remove as setinhas do input number */
+#preco::-webkit-outer-spin-button,
+#preco::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+#preco {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ===== Botões ===== */
+.botoes {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    transition: transform 0.12s, background 0.2s, box-shadow 0.2s;
+    color: #fff;
+    background: var(--primaria);
+}
+
+button:hover {
+    background: var(--primaria-escura);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+#botao-salvar {
+    background: linear-gradient(135deg, var(--primaria), var(--primaria-escura));
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+}
+
+#botao-salvar:hover {
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.45);
+}
+
+#botao-cancelar {
+    background: var(--bg-input);
+    border: 1px solid var(--borda);
+    color: var(--texto);
+}
+
+#botao-cancelar:hover {
+    background: #2a2f3a;
+}
+
+/* ===== Mensagens ===== */
+#mensagem {
+    min-height: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.25rem 0;
+}
+
+#mensagem.sucesso {
+    color: #4ade80;
+}
+
+#mensagem.erro {
+    color: #f87171;
+}
+
+/* ===== Lista de produtos ===== */
+#lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+#lista li {
+    background: var(--bg-card);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: var(--sombra);
+    transition: border-color 0.2s, transform 0.12s;
+    animation: aparecer 0.25s ease;
+}
+
+#lista li:hover {
+    border-color: #3a4150;
+    transform: translateY(-1px);
+}
+
+#lista li strong {
+    font-size: 1.05rem;
+    color: var(--texto);
+    display: block;
+}
+
+#lista .preco {
+    color: #4ade80;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-top: 0.15rem;
+}
+
+/* estados de carregamento / vazio */
+#lista li:only-child {
+    justify-content: center;
+    color: var(--texto-fraco);
+    font-style: italic;
+}
+
+/* botões dentro do item */
+#lista .botoes button {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+}
+
+#lista .editar {
+    background: #3b82f6;
+}
+
+#lista .editar:hover {
+    background: #2563eb;
+}
+
+/* botão apagar (o segundo .botoes dentro do li) */
+#lista li > .botoes button:last-child {
+    background: var(--perigo);
+}
+
+#lista li > .botoes button:last-child:hover {
+    background: var(--perigo-escura);
+}
+
+/* ===== Animação ===== */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 520px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    #lista li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #lista li > .botoes {
+        width: 100%;
+    }
+
+    #lista li > .botoes button {
+        flex: 1;
+    }
+}
