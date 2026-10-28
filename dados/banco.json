@@ -1,5 +1,5 @@
 {
-  "proximoId": 5,
+  "proximoId": 7,
   "produtos": [
     {
       "id": 1,
@@ -15,6 +15,16 @@
       "id": 3,
       "nome": "Bazuka",
       "preco": 7101.5
+    },
+    {
+      "id": 5,
+      "nome": "Red9",
+      "preco": 300.8
+    },
+    {
+      "id": 6,
+      "nome": "bomba",
+      "preco": 10
     }
   ]
 }
