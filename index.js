@@ -1,28 +1,12 @@
 const express = require('express');
+const path = require('path');
 const produtosRoutes = require('./routes/produtosRoute');
 
 const app = express();
 
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('Bem vindo à minha loja!');
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/produtos', produtosRoutes);
 
-// Handler de erro global — precisa ser o ÚLTIMO app.use antes do listen
-app.use((err, req, res, next) => {
-  console.error('[ERRO]', err);
-  res.status(500).json({ erro: 'Erro interno do servidor' });
-});
-
-const server = app.listen(3000, () => console.log('Servidor rodando na porta 3000.'));
-
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error('❌ Porta 3000 já está em uso. Feche o outro processo ou troque a porta.');
-    process.exit(1);
-  }
-  throw err;
-});
+app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
