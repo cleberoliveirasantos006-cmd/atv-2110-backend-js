@@ -18,9 +18,9 @@ function mostrarMensagem(texto, tipo) {
 
 function formatarPreco(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }  
+}
 
-function criarItem(valor) {
+function criarItem(produto) {
     const item = document.createElement('li');
 
     const info = document.createElement('div');
@@ -48,19 +48,20 @@ function criarItem(valor) {
     return item;
 }
 
-async function carregarProduto() {
+async function carregarProdutos() {
     lista.textContent = 'Carregando...';
 
     try {
         const resposta = await fetch(API);
+        if (!resposta.ok) throw new Error('Falha ao carregar');
         const produtos = await resposta.json();
 
         lista.textContent = '';
-        if (produtos.lenght === 0) {
+        if (produtos.length === 0) {
             lista.textContent = 'Nenhum produto cadastrado.';
             return;
         }
-        produtos.forEach(produto => lista.append(criarItem(produtos)));
+        produtos.forEach(produto => lista.append(criarItem(produto)));
     } catch {
         lista.textContent = 'Não foi possível carregar os produtos.';
     }
@@ -86,7 +87,7 @@ async function salvarProduto(evento) {
             return;
         }
 
-        mostrarMensagem(idEmEdicao ? 'Produto atualizado!': 'Produto cadastrado!', 'sucesso');
+        mostrarMensagem(idEmEdicao ? 'Produto atualizado!' : 'Produto cadastrado!', 'sucesso');
         cancelarEdicao();
         carregarProdutos();
     } catch {
@@ -110,7 +111,7 @@ function cancelarEdicao() {
     formulario.reset();
     tituloForm.textContent = 'Cadastrar produto';
     botaoSalvar.textContent = 'Cadastrar';
-    botaoCancelar.hidden = True;
+    botaoCancelar.hidden = true;
 }
 
 async function apagarProduto(produto) {
@@ -120,7 +121,7 @@ async function apagarProduto(produto) {
         const resposta = await fetch(`${API}/${produto.id}`, { method: 'DELETE' });
 
         if (!resposta.ok) {
-            mostrarMensagem('Não foi possivel apagar o produto.', 'erro');
+            mostrarMensagem('Não foi possível apagar o produto.', 'erro');
             return;
         }
 
