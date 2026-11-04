@@ -1,15 +1,72 @@
-const fs = require('fs/promises');
+const initSqlJs = require('sql.js');
+const fs = require('fs');
 const path = require('path');
 
-const CAMINHO = path.join(__dirname, 'banco.json');
+const CAMINHO = path.join(__dirname, 'loja.db');
+let db;
 
-async function lerBanco() {
-  const conteudo = await fs.readFile(CAMINHO, 'utf-8');
-  return JSON.parse(conteudo);
+function salvarArquivo() {
+    fs.writeFileSync(CAMINHO, Buffer.from(db.export()));
 }
 
-async function salvarBanco(banco) {
-  await fs.writeFile(CAMINHO, JSON.stringify(banco, null, 2));
+function consultar(sql, params = []) {
+    const comando = db.prepare(sql); 
+    comando.bind(params);
+    const linhas = [];
+    while (comando.step()) {
+        linhas.push(comando.getAsObject());
+    }
+    comando.free();
+    return linhas;
 }
 
-module.exports = { lerBanco, salvarBanco };
+async function iniciar() {
+    const SQL = await initSqlJs();
+    db = fs.existsSync(CAMINHO) ? new SQL.Database(fs.readFileSync(CAMINHO)) : new SQL.Database();
+    
+    db.run(`
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            preco REAL NOT NULL
+        )
+    `);
+    
+    const [{ total }] = consultar('SELECT COUNT(*) AS total FROM produtos');
+    if (total === 0) {
+        db.run('INSERT INTO produtos (nome, preco) VALUES (?, ?)', ['Tec9', 44.5]);
+        db.run('INSERT INTO produtos (nome, preco) VALUES (?, ?)', ['Red9', 120.5]);
+        db.run('INSERT INTO produtos (nome, preco) VALUES (?, ?)', ['TMP', 33.5]);
+        salvarArquivo();
+    }
+}
+
+function listar() {
+    return consultar('SELECT * FROM produtos');
+}
+
+function buscarPorId(id) {
+    return consultar('SELECT * FROM produtos WHERE id = ?', [id])[0]; 
+}
+
+function criar(nome, preco) {
+    db.run('INSERT INTO produtos (nome, preco) VALUES (?, ?)', [nome, preco]);
+    const [{ id }] = consultar('SELECT last_insert_rowid() AS id');
+    salvarArquivo();
+    return buscarPorId(id);
+}
+
+function atualizar(id, nome, preco) {
+    db.run('UPDATE produtos SET nome = ?, preco = ? WHERE id = ?', [nome, preco, id]);
+    salvarArquivo();
+    return buscarPorId(id);
+}
+
+function remover(id) {
+    db.run('DELETE FROM produtos WHERE id = ?', [id]);
+    const alteradas = db.getRowsModified(); 
+    salvarArquivo();
+    return alteradas > 0;
+}
+
+module.exports = { iniciar, listar, buscarPorId, criar, atualizar, remover };
