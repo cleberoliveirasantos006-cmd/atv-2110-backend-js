@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/produtos', produtosRoutes);
 
-repo.inicar()
+repo.iniciar()
     .then(() => {
         app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
     })
