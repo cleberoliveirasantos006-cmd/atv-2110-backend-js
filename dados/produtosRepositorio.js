@@ -22,7 +22,7 @@ function consultar(sql, params = []) {
 
 async function iniciar() {
     const SQL = await initSqlJs();
-    db = fs.existsSync(CAMINHO) ? new SQL.Database(fs.readFileSync(CAMINHO)) : new SQL.Database();
+    db = fs.existsSync(CAMINHO) ? new SQL.Database(new Uint8Array(fs.readFileSync(CAMINHO))) : new SQL.Database();
     
     db.run(`
         CREATE TABLE IF NOT EXISTS produtos (
@@ -64,7 +64,7 @@ function atualizar(id, nome, preco) {
 
 function remover(id) {
     db.run('DELETE FROM produtos WHERE id = ?', [id]);
-    const alteradas = db.getRowsModified(); 
+    const [{ alteradas }] = consultar('SELECT changes() AS alteradas'); 
     salvarArquivo();
     return alteradas > 0;
 }
