@@ -1,9 +1,10 @@
 const { lerBanco, salvarBanco } = require('../dados/produtosRepositorio');
 
-async function listar(req, res) {
-  const banco = await lerBanco();
-  res.json(banco.produtos);
+function listar(req, res) {
+  const produtos = repo.listar();
+  res.json(produtos);
 }
+
 
 async function buscarPorId(req, res) {
   const banco = await lerBanco();
