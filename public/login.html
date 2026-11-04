@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ＡＣＥＳＳＯ — Loja nem um pouco suspeita</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body class="pagina-auth">
+    <main class="caixa-auth">
+        <h1 class="titulo-auth">ＡＣＥＳＳＯ</h1>
+
+        <form id="form-auth" autocomplete="off">
+            <div class="barra-janela">💾 login.exe</div>
+            <h2 class="subtitulo-auth">Identifique-se</h2>
+
+            <input type="text" id="usuario" placeholder="Usuário"
+                   autocomplete="username" required>
+
+            <input type="password" id="senha" placeholder="Senha"
+                   autocomplete="current-password" required>
+
+            <button type="submit" id="botao-enviar">Entrar</button>
+
+            <p id="mensagem-auth"></p>
+
+            <p class="link-alternativo">
+                Não tem conta?
+                <a href="/cadastro.html">Cadastre-se</a>
+            </p>
+        </form>
+    </main>
+    <script src="login.js"></script>
+</body>
+</html>

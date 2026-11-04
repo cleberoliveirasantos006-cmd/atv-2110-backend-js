@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ＮＯＶＯ ＵＳＵＡＲＩＯ — Loja nem um pouco suspeita</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body class="pagina-auth">
+    <main class="caixa-auth">
+        <h1 class="titulo-auth">ＮＯＶＯ ＵＳＵＡＲＩＯ</h1>
+
+        <form id="form-auth" autocomplete="off">
+            <div class="barra-janela">💾 cadastro.exe</div>
+            <h2 class="subtitulo-auth">Crie sua conta</h2>
+
+            <input type="text" id="usuario" placeholder="Usuário (mín. 3 caracteres)"
+                   autocomplete="username" required minlength="3">
+
+            <input type="password" id="senha" placeholder="Senha (mín. 6 caracteres)"
+                   autocomplete="new-password" required minlength="6">
+
+            <input type="password" id="senha-confirmar" placeholder="Confirmar senha"
+                   autocomplete="new-password" required minlength="6">
+
+            <button type="submit" id="botao-enviar">Cadastrar</button>
+
+            <p id="mensagem-auth"></p>
+
+            <p class="link-alternativo">
+                Já tem conta?
+                <a href="/login.html">Entrar</a>
+            </p>
+        </form>
+    </main>
+    <script src="cadastro.js"></script>
+</body>
+</html>

@@ -53,6 +53,13 @@ async function carregarProdutos() {
 
     try {
         const resposta = await fetch(API);
+
+        // ===== NOVO: se a sessão caiu, volta pro login =====
+        if (resposta.status === 401) {
+            window.location.href = '/login.html';
+            return;
+        }
+
         if (!resposta.ok) throw new Error('Falha ao carregar');
         const produtos = await resposta.json();
 
@@ -80,6 +87,13 @@ async function salvarProduto(evento) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
         });
+
+        // ===== NOVO: sessão expirou =====
+        if (resposta.status === 401) {
+            window.location.href = '/login.html';
+            return;
+        }
+
         const corpo = await resposta.json();
 
         if (!resposta.ok) {
@@ -120,6 +134,12 @@ async function apagarProduto(produto) {
     try {
         const resposta = await fetch(`${API}/${produto.id}`, { method: 'DELETE' });
 
+        // ===== NOVO: sessão expirou =====
+        if (resposta.status === 401) {
+            window.location.href = '/login.html';
+            return;
+        }
+
         if (!resposta.ok) {
             mostrarMensagem('Não foi possível apagar o produto.', 'erro');
             return;
@@ -139,4 +159,29 @@ botaoCancelar.addEventListener('click', () => {
     mostrarMensagem('', '');
 });
 
+// ===== NOVO: sessão / nome do usuário / logout =====
+async function carregarUsuario() {
+    try {
+        const resposta = await fetch('/auth/me');
+        const dados = await resposta.json();
+
+        if (!dados.usuario) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        document.getElementById('nome-usuario').textContent = `👾 ${dados.usuario.usuario}`;
+    } catch {
+        window.location.href = '/login.html';
+    }
+}
+
+document.getElementById('botao-logout').addEventListener('click', async () => {
+    try {
+        await fetch('/auth/logout', { method: 'POST' });
+    } catch {}
+    window.location.href = '/login.html';
+});
+
+carregarUsuario();
 carregarProdutos();

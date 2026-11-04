@@ -367,3 +367,30 @@ button:active {
         flex: 1;
     }
 }
+
+/* ===== NOVO: barra de usuário / logout ===== */
+#barra-usuario {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--ciano);
+    text-shadow: 0 0 8px var(--azul);
+}
+
+#barra-usuario #nome-usuario {
+    letter-spacing: 0.05em;
+}
+
+#barra-usuario #botao-logout {
+    padding: 0.3rem 0.9rem;
+    font-size: 0.95rem;
+    background: linear-gradient(180deg, #6b6b6b, #333);
+    border-color: var(--rosa);
+}
+
+#barra-usuario #botao-logout:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 12px var(--rosa);
+}
