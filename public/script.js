@@ -11,6 +11,32 @@ const lista = document.getElementById('lista');
 
 let idEmEdicao = null;
 
+function authFetch(url, opcoes = {}) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return Promise.reject(new Error('sem token'));
+    }
+
+    const headers = {
+        ...(opcoes.headers || {}),
+        'Authorization': `Bearer ${token}`
+    };
+
+    return fetch(url, { ...opcoes, headers }).then(resposta => {
+        const novoToken = resposta.headers.get('X-New-Token');
+        if (novoToken) localStorage.setItem('token', novoToken);
+
+        if (resposta.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            window.location.href = '/login.html';
+            throw new Error('não autenticado');
+        }
+        return resposta;
+    });
+}
+
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
     mensagem.className = tipo;
@@ -52,14 +78,7 @@ async function carregarProdutos() {
     lista.textContent = 'Carregando...';
 
     try {
-        const resposta = await fetch(API);
-
-        // ===== NOVO: se a sessão caiu, volta pro login =====
-        if (resposta.status === 401) {
-            window.location.href = '/login.html';
-            return;
-        }
-
+        const resposta = await authFetch(API);
         if (!resposta.ok) throw new Error('Falha ao carregar');
         const produtos = await resposta.json();
 
@@ -82,17 +101,11 @@ async function salvarProduto(evento) {
     const metodo = idEmEdicao ? 'PUT' : 'POST';
 
     try {
-        const resposta = await fetch(url, {
+        const resposta = await authFetch(url, {
             method: metodo,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
         });
-
-        // ===== NOVO: sessão expirou =====
-        if (resposta.status === 401) {
-            window.location.href = '/login.html';
-            return;
-        }
 
         const corpo = await resposta.json();
 
@@ -132,13 +145,7 @@ async function apagarProduto(produto) {
     if (!confirm(`Apagar "${produto.nome}"?`)) return;
 
     try {
-        const resposta = await fetch(`${API}/${produto.id}`, { method: 'DELETE' });
-
-        // ===== NOVO: sessão expirou =====
-        if (resposta.status === 401) {
-            window.location.href = '/login.html';
-            return;
-        }
+        const resposta = await authFetch(`${API}/${produto.id}`, { method: 'DELETE' });
 
         if (!resposta.ok) {
             mostrarMensagem('Não foi possível apagar o produto.', 'erro');
@@ -159,27 +166,20 @@ botaoCancelar.addEventListener('click', () => {
     mostrarMensagem('', '');
 });
 
-// ===== NOVO: sessão / nome do usuário / logout =====
+// ===== sessão / nome do usuário / logout =====
 async function carregarUsuario() {
     try {
-        const resposta = await fetch('/auth/me');
+        const resposta = await authFetch('/auth/me');
         const dados = await resposta.json();
-
-        if (!dados.usuario) {
-            window.location.href = '/login.html';
-            return;
-        }
-
         document.getElementById('nome-usuario').textContent = `👾 ${dados.usuario.usuario}`;
     } catch {
-        window.location.href = '/login.html';
+        // authFetch já redirecionou se 401
     }
 }
 
-document.getElementById('botao-logout').addEventListener('click', async () => {
-    try {
-        await fetch('/auth/logout', { method: 'POST' });
-    } catch {}
+document.getElementById('botao-logout').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
     window.location.href = '/login.html';
 });
 

@@ -49,4 +49,6 @@ form.addEventListener('submit', async (e) => {
         botaoEnviar.disabled = false;
         botaoEnviar.textContent = 'Entrar';
     }
+    localStorage.setItem('token', corpo.token);
+    localStorage.setItem('usuario', JSON.stringify(corpo.usuario));
 });
