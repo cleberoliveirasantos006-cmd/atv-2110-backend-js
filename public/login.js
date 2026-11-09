@@ -42,6 +42,9 @@ form.addEventListener('submit', async (e) => {
             return;
         }
 
+        localStorage.setItem('token', corpo.token);
+        localStorage.setItem('usuario', JSON.stringify(corpo.usuario));    
+
         mostrar('ＡＣＥＳＳＯ ＬＩＢＥＲＡＤＯ', 'sucesso');
         setTimeout(() => { window.location.href = '/'; }, 600);
     } catch {
@@ -49,6 +52,4 @@ form.addEventListener('submit', async (e) => {
         botaoEnviar.disabled = false;
         botaoEnviar.textContent = 'Entrar';
     }
-    localStorage.setItem('token', corpo.token);
-    localStorage.setItem('usuario', JSON.stringify(corpo.usuario));
 });
